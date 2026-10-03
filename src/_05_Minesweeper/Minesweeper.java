@@ -68,6 +68,7 @@ public class Minesweeper extends PApplet {
      */
     void revealAllCells() {
         cells.stream().forEach( (i) -> i.revealed = true);
+        System.out.println("all revealed");
     }
     
     /*
@@ -81,7 +82,8 @@ public class Minesweeper extends PApplet {
      */
     boolean checkWin() {
     	  //filter uhh if revealed and count and match i thunk
-    	if( cells.stream().filter( (i) -> i.mine = false).count() == cells.size() ) {
+    	if( cells.stream().filter( (n) -> n.revealed = true ).filter((i) -> i.mine == false).count() == ( cells.size()-numOfMines )) {
+    		
     		return true;
     	} else {
     		return false;
@@ -108,12 +110,13 @@ public class Minesweeper extends PApplet {
     void revealCell(Cell cell) {
         if( cell.mine == false) {
         	cell.revealed = true;
-        	if(cell.minesAround == 0) {
-        		getNeighbors(cell);
-        		cells.stream().forEach( (i) -> {
-        			if( getNeighbors(cell).contains(i) == true ) {
+        	System.out.println(cell.minesAround);
+        	if(cell.minesAround == 0 ) {
+        		System.out.println("2 "+cell.minesAround);
+        		getNeighbors(cell).stream().filter( (c) -> c.revealed == false).forEach( (i) -> {
+        			 //if( getNeighbors(cell).contains(i) == true ) {
         			revealCell(i);
-        			}
+        		//	}
         			
         		} );
         		
@@ -135,9 +138,12 @@ public class Minesweeper extends PApplet {
      * 6. Use reduce() or sum() to count the number of 1s, i.e. mines
      */
     void setNumberOfSurroundingMines() {
-    	cells.stream().forEach( (i) -> { 
-    		getNeighbors(i).stream().filter( (d) -> d.mine = true).mapToInt( (n) -> cellToInt(n) ).sum();
-    	});
+	
+	    	cells.stream().forEach( (i) -> { 
+	    		i.minesAround = getNeighbors(i).stream().filter( (d) -> d.mine == true).mapToInt( (n) -> cellToInt(n) ).sum();
+	    	});
+    	
+    	
     	
     }
     
@@ -199,8 +205,9 @@ public class Minesweeper extends PApplet {
         if (state.equalsIgnoreCase("won")) {
             Cell.mineImg = Cell.wonImg;
         }
-        
+       
         revealAllCells();
+        
     }
 
     /*
