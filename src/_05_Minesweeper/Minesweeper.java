@@ -82,7 +82,7 @@ public class Minesweeper extends PApplet {
      */
     boolean checkWin() {
     	  //filter uhh if revealed and count and match i thunk
-    	if( cells.stream().filter( (n) -> n.revealed = true ).filter((i) -> i.mine == false).count() == ( cells.size()-numOfMines )) {
+    	if( cells.stream().filter( (n) -> n.revealed == true ).filter((i) -> i.mine == false).count() == ( cells.size()-numOfMines )) {
     		
     		return true;
     	} else {
